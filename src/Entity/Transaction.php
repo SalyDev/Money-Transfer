@@ -6,14 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\TransactionRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ApiResource(
+ * normalizationContext={"groups":"transaction:read"},
  *  attributes={
  *      "security"="is_granted('ROLE_USER_AGENCE')",
  *      "security_message"="Accès refusé"
@@ -25,7 +27,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *      message="Une transaction avec ce code existe déjà"
  * )
  * @ApiFilter(DateFilter::class, properties={"date_depot"})
- * @ApiFilter(SearchFilter::class, properties={"code": "partial"})
+ * @ApiFilter(SearchFilter::class, properties={"code": "exact"})
  */
 class Transaction
 {
@@ -33,53 +35,63 @@ class Transaction
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"transaction:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank(message="Champs Obligatoire")
+     * @Groups({"transaction:read"})
      */
     private $montant;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups({"transaction:read"})
      */
     private $date_depot;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups({"transaction:read"})
      */
     private $date_retrait;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Champs Obligatoire")
+     * @Groups({"transaction:read"})
      */
     private $code;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"transaction:read"})
      */
     private $frais;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"transaction:read"})
      */
     private $part_agence_depot;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"transaction:read"})
      */
     private $part_agence_retrait;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"transaction:read"})
      */
     private $part_etat;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"transaction:read"})
      */
     private $part_systeme;
 
@@ -87,21 +99,25 @@ class Transaction
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="depots_agence")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"transaction:read"})
      */
     private $user_agence_depot;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="retraits_agence")
+     * @Groups({"transaction:read"})
      */
     private $user_agence_retrait;
 
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="depots_client")
+     * @Groups({"transaction:read"})
      */
     private $client_depot;
 
     /**
      * @ORM\ManyToOne(targetEntity=Client::class, inversedBy="retraits_client")
+     * @Groups({"transaction:read"})
      */
     private $client_retrait;
 

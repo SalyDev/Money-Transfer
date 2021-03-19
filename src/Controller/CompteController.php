@@ -171,11 +171,11 @@ class CompteController extends AbstractController
             if($request["type"] == "retrait"){
                 $transaction = $this->transactionRepository->findOneBy(["code" => $request["code"]]);
                 // on teste si le retrait n'est pas encore déja fait
-                if($transaction->getUserAgenceRetrait()){
+                if($transaction->getDateRetrait()){
                     return new JsonResponse("Le retrait a été déjà effectué");
                 }
                 $compte->setSolde($compte->getSolde() + $transaction->getMontant());
-                $transaction->getClientRetrait()->setNumeroCni($request["beneficiaire"]["numero_cni"]);
+                $transaction->getClientRetrait()->setNumeroCni($request["client_retrait"]["numero_cni"]);
                 $transaction->setUserAgenceRetrait($connected_user);
                 $transaction->setDateRetrait(new DateTime());
             }

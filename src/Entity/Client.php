@@ -4,13 +4,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
-use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 
@@ -30,18 +31,21 @@ class Client
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"transaction:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Champs Obligatoire")
+     * @Groups({"transaction:read"})
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Champs Obligatoire")
+     * @Groups({"transaction:read"})
      */
     private $nom;
 
@@ -49,9 +53,10 @@ class Client
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Champs Obligatoire")
      * @Assert\Regex(
-     *     pattern="/^77|75|78|76|70([0-9]{7})$/",
+     *     pattern="/^(77|76|75|78|70)[0-9]{7}/",
      *     message="Numéro de tétéphone invalide"
      * )
+     * @Groups({"transaction:read"})
      */
     private $telephone;
 
@@ -61,6 +66,7 @@ class Client
      *     pattern="/^[0-9]{13}$/",
      *     message="N. CNI invalide"
      * )
+     * @Groups({"transaction:read"})
      */
     private $numero_cni;
 
